@@ -12,21 +12,36 @@ typedef unsigned long ull;
 
 using namespace std;
 
-
+// the fundamental unit -> A node or more precisely an "array node" with an
+// array of references to 26 nodes, (lowercase alphabets). Each of those 26 nodes would have
+// reference to 26 nodes and so on
 class Node {
     public:
+        // the array of references to other 26 'array nodes'
+        // character identified by index of the array
+        // (P.O - I guess if not identifiable by index of array, do you think a 
+        // hashmap would have been needed?)
         Node* alphabetList[26];
+        
+        // count of words that 'pass through but not end' at this node
         int countPrefix;// = 0;
+
+
+        // count of words that 'pass through && end' at this node
         int countEnd;// = 0;
+        
+        // redundant -> I think not needed since countEnd is there anyways
+        // due to some legacy code
         bool isEnd;/// = false;
 
 
+        // initialize with constructor
         Node() {
             countPrefix = 0;
             countEnd = 0;
             isEnd = false;
 
-            for (int i =0 ; i < 26; i++) {
+            for (int i = 0 ; i < 26; i++) {
                 alphabetList[i] = nullptr;
             }
         }
