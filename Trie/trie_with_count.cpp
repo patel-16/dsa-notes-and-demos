@@ -168,7 +168,12 @@ class Trie {
             return true;
         }
 
-	    int countWordsEqualTo(string word) {
+        // search/count exact occurences of a word/string
+        // iterate through each character of string sequentially and alongside
+        // iterate the Trie starting from root node, based on current character in the 
+        // string iteration
+        // if in between a character is missing, we just return 0; 
+	    int countWordsEqualTo(string word, bool isPrefixCountMode) {
 	        Node* current = root;
             for (int i = 0; i < word.size(); i++)
             {
@@ -178,9 +183,16 @@ class Trie {
                     current = current -> getNext(word[i]);
                 }
             }
-            return current -> countEnd;
+
+            if (isPrefixCountMode) {
+                return current -> countPrefix;
+            } else {
+                return current -> countEnd;
+            }
     	}
 
+        // This method was merged with above method
+        /*
 	    int countWordsStartingWith(string word) {
 	        Node* current = root;
             for (int i = 0; i < word.size(); i++)
@@ -193,7 +205,10 @@ class Trie {
             }
             return current -> countPrefix;
     	}
+        */
 
+        // I think this erase only works when a word exists in trie
+        // otherwise might create issues...need to see.
 	    void erase(string word) {
 	        Node* current = root;
             Node* prev = current;
@@ -240,7 +255,7 @@ int main() {
         // TODO - > Later add input validation if needed
         // as of now only lowercase alphabets
 
-        cout<<"\n Select Action \n";
+        cout<<"\nSelect Action \n";
         cout << "1 for Insert\n";
         cout << "2 for Delete\n";
         cout << "3 for Get word count - exact\n";
@@ -250,7 +265,9 @@ int main() {
         // cout << "5 for Entire tree diagram \n";
         
         string action;
+        cout<<"Press the number and hit return/enter : ";
         cin >> action;
+        cout<<"\n";
         // for some reason switch can't be used for
         // strings...maybe check later
         
@@ -266,12 +283,12 @@ int main() {
         
         } else if (action == "3") {
         
-            int freq = obj->countWordsEqualTo(queryString);
+            int freq = obj->countWordsEqualTo(queryString, false);
             cout<<"Exact word count - "<<freq<<"\n\n";
         
         } else if (action == "4") {
         
-            int freq = obj->countWordsStartingWith(queryString);
+            int freq = obj->countWordsEqualTo(queryString, true);
             cout<<"Prefix count - "<<freq<<"\n\n";
         
         } else if (action == "5") {
