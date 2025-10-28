@@ -12,9 +12,21 @@ typedef unsigned long ull;
 
 using namespace std;
 
+
+// 2 classes here
+// 1. Trie class
+// 2. Node class (Trie class 'uses' Node class, (not precisely 'has-a' relation I guess) )
+
 // the fundamental unit -> A node or more precisely an "array node" with an
 // array of references to 26 nodes, (lowercase alphabets). Each of those 26 nodes would have
 // reference to 26 nodes and so on
+// check properties and methods in the Node class for further details
+// if you go further espec. at insertWord method, you might realize that a 'Node' object here
+// (maybe along with 'level/height') 
+// fundamentally represents a 'position of character in a string'
+// level one will atmax have 26 node refs, 
+// level 2 will have 2 nodes capable of representing 26*26, 
+// level 3 capable of 26*26*26 etc
 class Node {
     public:
         // the array of references to other 26 'array nodes'
@@ -41,11 +53,20 @@ class Node {
             countEnd = 0;
             isEnd = false;
 
+            // initially all references to characters set to null
+            // notice the thing here, as mentioned above index is for character rep
+            // (0 to 26) while the actual pointer is supposed to point to next node ('array node')
             for (int i = 0 ; i < 26; i++) {
                 alphabetList[i] = nullptr;
             }
         }
         
+        // method to insert character to the current node
+        // if new/first occurence of character new Node creation needs to be handled, 
+        // thus isNew Parameter
+        // if a word ends at the current node, then we need to update countEnd
+        // thus isEnd (check its usage in Trie class)
+        // countPrefix is updated in all cases
         void insertChar(char c, bool isEnd, bool isNew) {
             if (isNew)
                 alphabetList[c - 'a'] = new Node();
@@ -53,10 +74,9 @@ class Node {
                 alphabetList[c - 'a'] -> countEnd += 1;
             }
             alphabetList[c - 'a'] -> countPrefix += 1;
-            
         }
 
-    
+        // to check based on index if a character present at the current node
         bool checkExist(char c) {
             return alphabetList[c - 'a'] != nullptr;
         }
@@ -65,6 +85,7 @@ class Node {
             alphabetList[c - 'a'] = nullptr;
         }
 
+        // get next node, again based on indexing of characters
         Node* getNext(char c) {
             return alphabetList[c - 'a'];
         }
@@ -86,16 +107,26 @@ class Node {
 
 };
 
+// Trie class that uses Node class
 class Trie {
 	public:
 
+        // just has reference to root Node, which turns out sufficient in this case
+        // since others can be accesed through it
         Node* root;
 
 	    Trie() {
 	        root = new Node();
 	    }
 
-	    void insert(string word) {
+        // method to insert a string/word
+        // here we iterate though each character of the word, along with iterating the Trie
+        // in sequence, see if it exists already at the current Node (using (checkExist)), 
+        // and also check if it is last character of string being inserted, 
+        // and pass isNew and isEnd respectively
+        // Also as we iterate through each character we also move to the next node 
+        // in the trie from the current one using getNext of Node
+	    void insertWord(string word) {
             Node* current = root;
 	        for (int i = 0; i < word.size(); i++) {
                 if ( ! current -> checkExist(word[i])) {
@@ -109,6 +140,7 @@ class Trie {
             current -> isEnd = true;
     	}
 
+        // Legacy, same as countWordsEqualTo, see below 
         bool search(string word) {
             Node* current = root;
             for (int i = 0; i < word.size(); i++)
@@ -122,6 +154,7 @@ class Trie {
             return current -> isEnd;
         }
 
+        // Legacy, same as countWordsStartingWith, see below 
         bool startsWith(string word) {
             Node* current = root;
             for (int i = 0; i < word.size(); i++)
@@ -185,9 +218,9 @@ int main() {
     Trie* obj = new Trie();
 
     /*
-    obj->insert("mango");
+    obj->insertWord("mango");
     int param_2 = obj->countWordsEqualTo("apple");
-    obj->insert("app");
+    obj->insertWord("app");
     int param_3 = obj->countWordsStartingWith("app");
     obj->erase("app");
     // int param_4 = obj->countWordsEqualTo("work");
@@ -223,7 +256,7 @@ int main() {
         
         if (action == "1") {
 
-            obj->insert(queryString);
+            obj->insertWord(queryString);
             cout<<"\n";
         
         } else if (action == "2") {
