@@ -13,6 +13,8 @@ typedef unsigned long ull;
 using namespace std;
 
 
+// (CP note -  can sometimes be implemented up quickly using std map);
+
 // 2 classes here
 // 1. Trie class
 // 2. Node class (Trie class 'uses' Node class, (not precisely 'has-a' relation I guess) )
