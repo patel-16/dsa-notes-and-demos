@@ -1,0 +1,5 @@
+
+Given two strings, one is a query string and the other is a source string. The task is to print the indexes of all the occurrences of the query string in the source string. Use 0-based indexing while returning the indices.
+Note: Return an empty list in case of no occurrences of pattern.
+
+NOTE - a very ubiquitous problem I think, in code editors, text editors etc...the Ctrl + F problem
