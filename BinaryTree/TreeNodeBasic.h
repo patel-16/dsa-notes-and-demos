@@ -1,3 +1,7 @@
+#ifndef TREE_NODE_BASIC_H
+#define TREE_NODE_BASIC_H
+
+
 // TreeNodeSimple.h
 
 // yet to put some study in how .h files are prepared
@@ -25,3 +29,5 @@ class TreeNode {
             this -> val = val;
         }
 };
+
+#endif
